@@ -1351,7 +1351,7 @@ case $os in
 	     | ptx* | coff* | ecoff* | winnt* | domain* | vsta* \
 	     | udi* | eabi* | lites* | ieee* | go32* | aux* | hcos* \
 	     | chorusrdb* | cegcc* | glidix* \
-	     | cygwin* | msys* | pe* | moss* | proelf* | rtems* \
+	     | cygwin* | msys* | pe* | moss* | nautilus* | proelf* | rtems* \
 	     | midipix* | mingw32* | mingw64* | linux-gnu* | linux-android* \
 	     | linux-newlib* | linux-musl* | linux-uclibc* \
 	     | uxpv* | beos* | mpeix* | udk* | moxiebox* \
