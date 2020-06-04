@@ -25,7 +25,14 @@
 First I set up a dummy cross toolchain for binutils:
 
 ```
-$ for i in (ar as cc g++ gcc ld nm objcopy objdump ranlib readelf strip); do ln -s /usr/bin/$i /usr/bin/x86_64-pc-nautilus-$i; done;
+$ for i in ar as cc g++ gcc ld nm objcopy objdump ranlib readelf strip; do ln -s /usr/bin/$i /usr/bin/x86_64-pc-nautilus-$i; done;
+```
+
+I added a script called `naut-scripts/setup.sh` to do this automatically,
+so instead of the above you can just do:
+
+```
+$ naut-scripts/setup.sh
 ```
 
 Then you can configure, from the top-level newlib dir:
@@ -39,9 +46,13 @@ $ ../configure --target=x86_64-pc-nautilus --with-newlib --disable-multilib --pr
 
 ## Build
 ```
-$ make -j
+$ make all-target-newlib -j
 $ make install
 ```
+
+Sometimes I would get a strange file truncation error from `ar` in the
+final stage of the build. I haven't really pinpointed the root cause of it, 
+but if you manually re-run that ar command and then do a `make install` it seems to work.
 
 ## Copying over to Nautilus
 ```
@@ -51,6 +62,8 @@ $ cp /newlib-install/x86_64-pc-nautilus/lib/*.a <nautilus-dir>/newlib
 $ cp /newlib-install/x86_64-pc-nautilus/lib/crt0.o <nautilus-dir>/newlib
 $ cp /newlib-install/x86_64-pc-nautilus/include/* <nautilus-dir>/newlib_inc
 ```
+
+There's another helper script in `naut-scripts/copy.sh` for this as well.
 
 ## References
 These StackOverflow questions were helpful in finding out what was going on with automake
