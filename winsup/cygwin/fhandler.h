@@ -328,7 +328,7 @@ class fhandler_base
 
   virtual bool get_readahead_valid () { return raixget () < ralen (); }
   int puts_readahead (const char *s, size_t len = (size_t) -1);
-  int put_readahead (char value);
+  virtual int put_readahead (char value);
 
   int get_readahead ();
   int peek_readahead (int queryput = 0);
@@ -1443,7 +1443,7 @@ class fhandler_fifo: public fhandler_base
   { return shmem->get_shared_fc_handler_committed (); }
   void set_shared_fc_handler_committed (size_t n)
   { shmem->set_shared_fc_handler_committed (n); }
-  int update_my_handlers (bool from_exec = false);
+  int update_my_handlers ();
   int update_shared_handlers ();
   bool shared_fc_handler_updated () const
   { return shmem->shared_fc_handler_updated (); }
@@ -2040,6 +2040,7 @@ class dev_console
   char *cons_rapoi;
   LONG xterm_mode_input;
   LONG xterm_mode_output;
+  bool cursor_key_app_mode;
 
   inline UINT get_console_cp ();
   DWORD con_to_str (char *d, int dlen, WCHAR w);
@@ -2284,6 +2285,7 @@ class fhandler_pty_slave: public fhandler_pty_common
 
   bool try_reattach_pcon ();
   void restore_reattach_pcon ();
+  inline void free_attached_console ();
 
  public:
   /* Constructor */
@@ -2379,6 +2381,7 @@ public:
   int process_slave_output (char *buf, size_t len, int pktmode_on);
   void doecho (const void *str, DWORD len);
   int accept_input ();
+  int put_readahead (char value);
   int open (int flags, mode_t mode = 0);
   void open_setup (int flags);
   ssize_t __stdcall write (const void *ptr, size_t len);

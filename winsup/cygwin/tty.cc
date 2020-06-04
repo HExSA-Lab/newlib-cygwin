@@ -242,9 +242,8 @@ tty::init ()
   screen_alternated = false;
   mask_switch_to_pcon_in = false;
   pcon_pid = 0;
-  num_pcon_attached_slaves = 0;
   term_code_page = 0;
-  need_redraw_screen = false;
+  need_redraw_screen = true;
   fwd_done = NULL;
   pcon_last_time = 0;
   pcon_in_empty = true;
@@ -293,4 +292,27 @@ tty_min::ttyname ()
   device d;
   d.parse (ntty);
   return d.name ();
+}
+
+void
+tty::set_switch_to_pcon_out (bool v)
+{
+  if (switch_to_pcon_out != v)
+    {
+      wait_pcon_fwd ();
+      switch_to_pcon_out = v;
+    }
+}
+
+void
+tty::wait_pcon_fwd (void)
+{
+  const int sleep_in_pcon = 16;
+  const int time_to_wait = sleep_in_pcon * 2 + 1/* margine */;
+  pcon_last_time = GetTickCount ();
+  while (GetTickCount () - pcon_last_time < time_to_wait)
+    {
+      int tw = time_to_wait - (GetTickCount () - pcon_last_time);
+      cygwait (tw);
+    }
 }

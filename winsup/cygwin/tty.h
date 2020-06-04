@@ -103,7 +103,6 @@ private:
   bool screen_alternated;
   bool mask_switch_to_pcon_in;
   pid_t pcon_pid;
-  int num_pcon_attached_slaves;
   UINT term_code_page;
   bool need_redraw_screen;
   HANDLE fwd_done;
@@ -140,6 +139,8 @@ public:
   void set_master_ctl_closed () {master_pid = -1;}
   static void __stdcall create_master (int);
   static void __stdcall init_session ();
+  void set_switch_to_pcon_out (bool v);
+  void wait_pcon_fwd (void);
   friend class fhandler_pty_common;
   friend class fhandler_pty_master;
   friend class fhandler_pty_slave;
