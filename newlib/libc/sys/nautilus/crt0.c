@@ -4,7 +4,7 @@
 
 int libc_sd = -1;
 
-extern int main(int argc, char** argv);
+extern int main(int argc, char** argv, char **env);
 extern void __libc_init_array(void);
 extern void __libc_fini_array (void);
 extern int _init_signal(void);
@@ -31,7 +31,7 @@ int libc_start(int argc, char** argv, char** env)
    /* initialize simple signal handling */
    //_init_signal();
 
-   ret = main(argc, argv);
+   ret = main(argc, argv, env);
 
    /* call exit from the C library so atexit gets called, and the
       C++ destructors get run. This calls our exit routine below    
