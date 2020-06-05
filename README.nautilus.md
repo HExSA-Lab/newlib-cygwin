@@ -51,8 +51,9 @@ $ make install
 ```
 
 Sometimes I would get a strange file truncation error from `ar` in the
-final stage of the build. I haven't really pinpointed the root cause of it, 
-but if you manually re-run that ar command and then do a `make install` it seems to work.
+final stage of the build. I haven't really pinpointed the root cause of it, but
+the current fix is to re-run the ar command from the build, remake, then make install.
+See `scripts/fixup.sh`
 
 ## Copying over to Nautilus
 ```
