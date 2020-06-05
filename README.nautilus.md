@@ -22,49 +22,39 @@
 9. Configured and built newlib as below, then copied over the install files to Nautilus to link directly.
 
 ## Configure
-First I set up a dummy cross toolchain for binutils:
+First I set up a dummy cross toolchain for binutils on the first run:
 
 ```
-$ for i in ar as cc g++ gcc ld nm objcopy objdump ranlib readelf strip; do ln -s /usr/bin/$i /usr/bin/x86_64-pc-nautilus-$i; done;
+$ for i in ar as cc g++ gcc ld nm objcopy objdump ranlib readelf strip; do ln -s /usr/bin/$i /usr/bin/x86_64--nautilus-$i; done;
 ```
 
-I added a script called `naut-scripts/setup.sh` to do this automatically,
-so instead of the above you can just do:
+If you've already got a cross-compiler built, just make sure the binaries (in my case in `/opt/nautilus/cross/bin/`)
+are on your `PATH`.
 
-```
-$ naut-scripts/setup.sh
-```
 
 Then you can configure, from the top-level newlib dir:
 
 ```
 $ mkdir bld-nautilus
 $ cd bld-nautilus
-$ mkdir /newlib-install
-$ ../configure --target=x86_64-pc-nautilus --with-newlib --disable-multilib --prefix=/newlib-install
+$ ../configure --target=x86_64-nautilus --with-newlib --disable-multilib --prefix=/usr
 ```
+
 
 ## Build
 ```
 $ make all-target-newlib -j
-$ make install
+$ make -j
+$ make DESTDIR=$SYSROOT install
 ```
 
-Sometimes I would get a strange file truncation error from `ar` in the
-final stage of the build. I haven't really pinpointed the root cause of it, but
-the current fix is to re-run the ar command from the build, remake, then make install.
-See `scripts/fixup.sh`
+Where `SYSROOT` for me is `/opt/nautilus/sysroot`. This was also passed to the gcc/binutils build.
 
-## Copying over to Nautilus
-```
-$ mkdir <nautilus-dir>/newlib
-$ mkdir <nautilus-dir>/newlib_inc
-$ cp /newlib-install/x86_64-pc-nautilus/lib/*.a <nautilus-dir>/newlib
-$ cp /newlib-install/x86_64-pc-nautilus/lib/crt0.o <nautilus-dir>/newlib
-$ cp /newlib-install/x86_64-pc-nautilus/include/* <nautilus-dir>/newlib_inc
-```
+newlib does not install in quite the right place. You have to move things over to `sysroot/usr/{include,lib}`
+rather than `sysroot/usr/TARGET/{include,lib}`.
+See `naut-scripts/fixup.sh`
 
-There's another helper script in `naut-scripts/copy.sh` for this as well.
+Note that Nautilus must point directly to these libraries and the cross-compiler toolchain binaries.
 
 ## References
 These StackOverflow questions were helpful in finding out what was going on with automake

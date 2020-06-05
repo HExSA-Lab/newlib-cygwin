@@ -11,15 +11,16 @@ extern int _init_signal(void);
 extern char** environ;
 
 
+
 int libc_start(int argc, char** argv, char** env)
 {
    int ret;
 
    /* call init function */
-   //__libc_init_array();
+   __libc_init_array();
 
    /* register a function to be called at normal process termination */
-   //atexit(__libc_fini_array);
+   atexit(__libc_fini_array);
 
    /* optind is the index of the next element to be processed in argv */
    optind = 0;

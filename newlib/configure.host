@@ -649,7 +649,7 @@ case "${host}" in
 	syscall_dir=syscalls
 	;;
   *-*-nautilus*)
-    newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED -D__DYNAMIC_REENT__ -DSIGNAL_PROVIDED -D_FORTIFY_SOURCE=0"
+    newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_INIT_FINI_ARRAY -DHAVE_INIT_FINI -D__DYNAMIC_REENT__ -DSIGNAL_PROVIDED -D_FORTIFY_SOURCE=0"
     ;;
   *-*-phoenix*)
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES -D_COMPILING_NEWLIB -DHAVE_BLKSIZE -DHAVE_NANOSLEEP"
